@@ -11,19 +11,28 @@ Key features of the system include an intuitive user interface for librarians to
 
 ```sql
 
+CREATE TABLE IF NOT EXISTS genres (
+    id   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   `name` varchar(50),
+    INDEX (`name`),
+    UNIQUE (`name`)
+);
+
 CREATE TABLE IF NOT EXISTS books (
-  id     INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  title  varchar(50) NOT NULL,
-  ISBN   varchar(255) NOT NULL,
-  INDEX title_index (title),
-  UNIQUE (title, ISBN)
+    id       INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title    varchar(50) NOT NULL,
+    ISBN     varchar(255) NOT NULL,
+    genre_id INTEGER UNSIGNED NOT NULL,
+    INDEX title_index (title),
+    UNIQUE (title, ISBN),
+    CONSTRAINT FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
 
 CREATE TABLE IF NOT EXISTS authors (
-  id         INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  first_name varchar(50) NOT NULL,
-  last_name  varchar(50) NOT NULL,
-  UNIQUE (first_name, last_name)
+    id         INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    first_name varchar(50) NOT NULL,
+    last_name  varchar(50) NOT NULL,
+    UNIQUE (first_name, last_name)
 );
 
 CREATE TABLE IF NOT EXISTS book_authors (

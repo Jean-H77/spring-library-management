@@ -6,7 +6,7 @@ import org.library.springlibrarymanagement.services.BookService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/book")
+@RequestMapping("api/v1/books")
 @RequiredArgsConstructor
 public class BookController {
 
