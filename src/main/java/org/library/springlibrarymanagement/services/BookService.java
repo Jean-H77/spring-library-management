@@ -2,19 +2,16 @@ package org.library.springlibrarymanagement.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.library.springlibrarymanagement.entities.BookEntity;
-import org.library.springlibrarymanagement.models.AuthorModel;
 import org.library.springlibrarymanagement.models.BookModel;
-import org.library.springlibrarymanagement.repositories.AuthorRepository;
 import org.library.springlibrarymanagement.repositories.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,26 +54,3 @@ public class BookService {
         bookRepository.save(bookEntity);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*Set<AuthorModel> authorModels = bookModel.getAuthors();
-        Set<AuthorEntity> entities = new HashSet<>();
-        authorModels.forEach(authorModel ->
-                entities.add(authorRepository.save(
-                        AuthorEntity.builder().
-                        firstName(authorModel.getFirstName())
-                        .lastName(authorModel.getLastName())
-                        .build())
-        ));
-
-        entities.forEach(bookEntity::addAuthorEntity);*/
