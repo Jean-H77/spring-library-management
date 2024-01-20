@@ -17,6 +17,11 @@ public class BookController {
         return bookService.getBookByTitle(title);
     }
 
+    @DeleteMapping("/{title}")
+    public void deleteBookByTitle(@PathVariable String title) {
+        bookService.deleteBookByTitle(title);
+    }
+
     @PostMapping
     public void createBook(@RequestBody BookModel bookModel) {
         bookService.createBook(bookModel);

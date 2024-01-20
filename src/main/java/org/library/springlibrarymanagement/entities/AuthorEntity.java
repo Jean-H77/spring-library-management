@@ -25,8 +25,7 @@ public class AuthorEntity {
     private String lastName;
 
     @ManyToMany(mappedBy = "authorEntities",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            fetch = FetchType.LAZY)
     private Set<BookEntity> bookEntities = new HashSet<>();
 
     @Override

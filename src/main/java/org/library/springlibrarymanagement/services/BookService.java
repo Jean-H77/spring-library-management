@@ -35,10 +35,16 @@ public class BookService {
     }
 
     @Transactional
+    public void deleteBookByTitle(String title) {
+        bookRepository.deleteByTitle(title);
+    }
+
+    @Transactional
     public void createBook(BookModel bookModel) {
         BookEntity bookEntity = new BookEntity();
         bookEntity.setTitle(bookModel.getTitle());
         bookEntity.setISBN(bookModel.getISBN());
+        bookEntity.setGenreId(bookModel.getGenreId());
 
         Set<AuthorEntity> authors = bookModel.getAuthors().stream()
                 .map(authorModel -> {

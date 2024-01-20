@@ -14,4 +14,6 @@ public class BookModel {
     private String ISBN;
 
     private Set<AuthorModel> authors;
+
+    private int genreId;
 }

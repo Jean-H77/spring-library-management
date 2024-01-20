@@ -25,7 +25,10 @@ public class BookEntity {
     @Column(name = "ISBN")
     private String ISBN;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade =  CascadeType.PERSIST)
+    @Column(name = "genre_id")
+    private int genreId;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade =  {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "book_authors",
             joinColumns = @JoinColumn(name = "book_id"),
