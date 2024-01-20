@@ -49,7 +49,7 @@ public class BookService {
                 })
                 .collect(Collectors.toSet());
 
-        bookEntity.getAuthorEntities().addAll(authors);
+        bookEntity.addAuthorEntities(authors);
 
         bookRepository.save(bookEntity);
     }
