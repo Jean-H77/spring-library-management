@@ -17,9 +17,9 @@ public class BookController {
         return bookService.getBookByTitle(title);
     }
 
-    @DeleteMapping("/{title}")
-    public void deleteBookByTitle(@PathVariable String title) {
-        bookService.deleteBookByTitle(title);
+    @DeleteMapping("/{id}")
+    public void deleteBookById(@PathVariable Long id) {
+        bookService.deleteBookById(id);
     }
 
     @PostMapping

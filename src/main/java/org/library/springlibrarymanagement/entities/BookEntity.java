@@ -42,10 +42,6 @@ public class BookEntity {
     }
 
     public void addAuthorEntities(Set<AuthorEntity> authorEntities) {
-        authorEntities.forEach(authorEntity -> {
-            this.authorEntities.add(authorEntity);
-            authorEntity.getBookEntities().add(this);
-        });
+        authorEntities.forEach(this::addAuthorEntity);
     }
-
 }
