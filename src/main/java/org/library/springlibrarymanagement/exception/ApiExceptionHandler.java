@@ -4,23 +4,41 @@ import org.library.springlibrarymanagement.exception.exceptions.ApiBadRequestExc
 import org.library.springlibrarymanagement.exception.exceptions.ApiResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {ApiBadRequestException.class})
-    public ResponseEntity<Object> handleBadRequestException(ApiBadRequestException exception) {
+    public ResponseEntity<?> handleBadRequestException(ApiBadRequestException exception) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("Z"));
+        ApiException apiException;
 
-        ApiException apiException = new ApiException(
-                exception.getMessage(),
-                badRequest,
-                ZonedDateTime.now(ZoneId.of("Z")));
+        if(exception.getBindingResult() != null) {
+            HashMap<String, String> errors = new HashMap<>();
+
+            for(ObjectError error : exception.getBindingResult().getAllErrors()) {
+                errors.put(error.getCode(), error.getDefaultMessage());
+            }
+
+            apiException = new ApiException(
+                    exception.getMessage(),
+                    badRequest,
+                    timestamp,
+                    errors);
+        } else {
+            apiException = new ApiException(
+                    exception.getMessage(),
+                    badRequest,
+                    timestamp);
+        }
 
         return new ResponseEntity<>(apiException, badRequest);
     }

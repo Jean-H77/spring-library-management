@@ -30,15 +30,14 @@ public class BookFormValidator implements Validator {
 
             if(bookService.existsByTitle(title)) {
                 errors.reject("exists","Book already in database");
-                return;
             }
 
             if(title.length() > 50) {
-                errors.reject("title", "book title must not be over 50 characters in length.");
+                errors.reject("title", "book title must be between 1 and 50 characters in length.");
             }
 
             if(bookModel.getISBN().length() > 255) {
-                errors.reject("ISBN", "ISBN must not be over 255 characters in length.");
+                errors.reject("ISBN", "ISBN must be between 1 and 255 characters in length.");
             }
 
             if(bookModel.getGenreId() < 1) {

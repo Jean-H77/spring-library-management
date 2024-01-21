@@ -2,6 +2,7 @@ package org.library.springlibrarymanagement.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.library.springlibrarymanagement.entities.BookEntity;
 import org.library.springlibrarymanagement.exception.exceptions.ApiBadRequestException;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.Optional;
 import java.util.Set;
@@ -52,7 +54,7 @@ public class BookService {
         bookFormValidator.validate(bookModel, bindingResult);
 
         if(bindingResult.hasErrors()) {
-            throw new ApiBadRequestException(bindingResult.toString());
+            throw new ApiBadRequestException("Could not complete book creation", bindingResult);
         }
 
         BookEntity bookEntity = new BookEntity();
