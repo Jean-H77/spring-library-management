@@ -1,15 +1,20 @@
 package org.library.springlibrarymanagement.validators.book;
 
-import lombok.RequiredArgsConstructor;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.services.BookService;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-@RequiredArgsConstructor
+@Component
 public class BookFormValidator implements Validator {
 
     private final BookService bookService;
+
+    public BookFormValidator(@Lazy BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @Override
     public boolean supports(Class<?> clazz) {

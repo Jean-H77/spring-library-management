@@ -9,6 +9,7 @@ import org.library.springlibrarymanagement.exception.exceptions.ApiResourceNotFo
 import org.library.springlibrarymanagement.models.AuthorModel;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.repositories.BookRepository;
+import org.library.springlibrarymanagement.validators.book.BookFormValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+
+    private final BookFormValidator bookFormValidator;
 
     public ResponseEntity<BookModel> getBookByTitle(String title) {
         Optional<BookEntity> optionalBookEntity = bookRepository.findByTitle(title);
@@ -45,6 +48,8 @@ public class BookService {
 
     @Transactional
     public ResponseEntity<BookModel> createBook(BookModel bookModel, BindingResult bindingResult) {
+
+        bookFormValidator.validate(bookModel, bindingResult);
 
         if(bindingResult.hasErrors()) {
             throw new ApiBadRequestException(bindingResult.toString());
@@ -79,7 +84,8 @@ public class BookService {
     }
 
     private static BookModel bookEntityToModel(BookEntity bookEntity) {
-        return BookModel.builder()
+        return BookModel
+                .builder()
                 .title(bookEntity.getTitle())
                 .ISBN(bookEntity.getISBN())
                 .genreId(bookEntity.getGenreId())
