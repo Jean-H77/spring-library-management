@@ -1,11 +1,11 @@
 package org.library.springlibrarymanagement.repositories;
 
 import org.library.springlibrarymanagement.entities.AuthorEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface AuthorRepository extends JpaRepository<AuthorEntity, Long> {
+public interface AuthorRepository extends CrudRepository<AuthorEntity, Long> {
 
     List<AuthorEntity> findAllByFirstNameInAndLastNameIn(List<String> firstName, List<String> lastName);
 }

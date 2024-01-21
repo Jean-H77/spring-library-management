@@ -2,7 +2,6 @@ package org.library.springlibrarymanagement.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.library.springlibrarymanagement.entities.BookEntity;
 import org.library.springlibrarymanagement.exception.exceptions.ApiBadRequestException;
@@ -11,23 +10,27 @@ import org.library.springlibrarymanagement.models.AuthorModel;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.repositories.BookRepository;
 import org.library.springlibrarymanagement.validators.book.BookFormValidator;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
 
     private final BookFormValidator bookFormValidator;
+
+    public BookService(BookRepository bookRepository, @Lazy BookFormValidator bookFormValidator) {
+        this.bookRepository = bookRepository;
+        this.bookFormValidator = bookFormValidator;
+    }
 
     public ResponseEntity<BookModel> getBookByTitle(String title) {
         Optional<BookEntity> optionalBookEntity = bookRepository.findByTitle(title);

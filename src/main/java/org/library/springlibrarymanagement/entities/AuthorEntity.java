@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "authors")
+@Table(name = "authors", uniqueConstraints={@UniqueConstraint(columnNames = {"first_name" , "last_name"})})
 @NoArgsConstructor
 @Getter
 @Setter
