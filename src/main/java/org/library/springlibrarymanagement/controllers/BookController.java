@@ -3,6 +3,8 @@ package org.library.springlibrarymanagement.controllers;
 import lombok.RequiredArgsConstructor;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.services.BookService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +15,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/{title}")
-    public BookModel getBookByTitle(@PathVariable String title) {
+    public ResponseEntity<BookModel> getBookByTitle(@PathVariable String title) {
         return bookService.getBookByTitle(title);
     }
 
@@ -23,7 +25,7 @@ public class BookController {
     }
 
     @PostMapping
-    public void createBook(@RequestBody BookModel bookModel) {
-        bookService.createBook(bookModel);
+    public ResponseEntity<BookModel> createBook(@RequestBody BookModel bookModel, BindingResult bindingResult) {
+        return bookService.createBook(bookModel, bindingResult);
     }
 }

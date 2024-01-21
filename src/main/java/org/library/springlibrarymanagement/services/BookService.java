@@ -4,11 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.library.springlibrarymanagement.entities.BookEntity;
+import org.library.springlibrarymanagement.exception.exceptions.ApiBadRequestException;
+import org.library.springlibrarymanagement.exception.exceptions.ApiResourceNotFoundException;
+import org.library.springlibrarymanagement.models.AuthorModel;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.repositories.BookRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 import java.util.Set;
@@ -20,22 +24,32 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public BookModel getBookByTitle(String title) {
+    public ResponseEntity<BookModel> getBookByTitle(String title) {
         Optional<BookEntity> optionalBookEntity = bookRepository.findByTitle(title);
 
         if(optionalBookEntity.isPresent()) {
             BookEntity bookEntity = optionalBookEntity.get();
-            BookModel.builder()
+
+            BookModel bookModel = BookModel.builder()
                     .title(bookEntity.getTitle())
                     .ISBN(bookEntity.getISBN())
+                    .genreId(bookEntity.getGenreId())
+                    .authors(authorEntityToModels(bookEntity.getAuthorEntities()))
                     .build();
+
+            return new ResponseEntity<>(bookModel, HttpStatus.OK);
         }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book with title " + title + " has not been found");
+        throw new ApiResourceNotFoundException("Cannot find book with the title = " + title);
     }
 
     @Transactional
-    public void createBook(BookModel bookModel) {
+    public ResponseEntity<BookModel> createBook(BookModel bookModel, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            throw new ApiBadRequestException(bindingResult.toString());
+        }
+
         BookEntity bookEntity = new BookEntity();
         bookEntity.setTitle(bookModel.getTitle());
         bookEntity.setISBN(bookModel.getISBN());
@@ -52,11 +66,39 @@ public class BookService {
 
         bookEntity.addAuthorEntities(authors);
 
-        bookRepository.save(bookEntity);
+        return new ResponseEntity<>(bookEntityToModel(bookRepository.save(bookEntity)), HttpStatus.CREATED);
     }
 
     @Transactional
     public void deleteBookById(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public boolean existsByTitle(String title) {
+        return bookRepository.existsByTitle(title);
+    }
+
+    private static BookModel bookEntityToModel(BookEntity bookEntity) {
+        return BookModel.builder()
+                .title(bookEntity.getTitle())
+                .ISBN(bookEntity.getISBN())
+                .genreId(bookEntity.getGenreId())
+                .authors(authorEntityToModels(bookEntity.getAuthorEntities()))
+                .build();
+    }
+
+    private static AuthorModel authorEntityToModels(AuthorEntity authorEntity) {
+        return AuthorModel
+                .builder()
+                .firstName(authorEntity.getFirstName())
+                .lastName(authorEntity.getLastName())
+                .build();
+    }
+
+    private static Set<AuthorModel> authorEntityToModels(Set<AuthorEntity> authorEntities) {
+        return authorEntities
+                .stream()
+                .map(BookService::authorEntityToModels)
+                .collect(Collectors.toSet());
     }
 }
