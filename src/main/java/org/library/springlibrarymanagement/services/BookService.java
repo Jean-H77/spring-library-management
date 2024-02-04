@@ -1,12 +1,10 @@
 package org.library.springlibrarymanagement.services;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.library.springlibrarymanagement.entities.BookEntity;
 import org.library.springlibrarymanagement.exception.exceptions.ApiBadRequestException;
 import org.library.springlibrarymanagement.exception.exceptions.ApiResourceNotFoundException;
-import org.library.springlibrarymanagement.models.AuthorModel;
 import org.library.springlibrarymanagement.models.BookModel;
 import org.library.springlibrarymanagement.repositories.BookRepository;
 import org.library.springlibrarymanagement.validators.book.BookFormValidator;
@@ -19,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.library.springlibrarymanagement.services.AuthorService.authorEntityToModels;
 
 @Service
 public class BookService {
@@ -37,13 +37,7 @@ public class BookService {
 
         if(optionalBookEntity.isPresent()) {
             BookEntity bookEntity = optionalBookEntity.get();
-
-            BookModel bookModel = BookModel.builder()
-                    .title(bookEntity.getTitle())
-                    .ISBN(bookEntity.getISBN())
-                    .genreId(bookEntity.getGenreId())
-                    .authors(authorEntityToModels(bookEntity.getAuthorEntities()))
-                    .build();
+            BookModel bookModel = bookEntityToModel(bookEntity);
 
             return new ResponseEntity<>(bookModel, HttpStatus.OK);
         }
@@ -88,7 +82,7 @@ public class BookService {
         return bookRepository.existsByTitle(title);
     }
 
-    private static BookModel bookEntityToModel(BookEntity bookEntity) {
+    public static BookModel bookEntityToModel(BookEntity bookEntity) {
         return BookModel
                 .builder()
                 .title(bookEntity.getTitle())
@@ -96,20 +90,5 @@ public class BookService {
                 .genreId(bookEntity.getGenreId())
                 .authors(authorEntityToModels(bookEntity.getAuthorEntities()))
                 .build();
-    }
-
-    private static AuthorModel authorEntityToModels(AuthorEntity authorEntity) {
-        return AuthorModel
-                .builder()
-                .firstName(authorEntity.getFirstName())
-                .lastName(authorEntity.getLastName())
-                .build();
-    }
-
-    private static Set<AuthorModel> authorEntityToModels(Set<AuthorEntity> authorEntities) {
-        return authorEntities
-                .stream()
-                .map(BookService::authorEntityToModels)
-                .collect(Collectors.toSet());
     }
 }

@@ -38,7 +38,7 @@ public class BookFormValidator implements Validator {
             }
 
             if(bookModel.getGenreId() < 1) {
-                errors.reject("GenreId", "GenreId must be greater than 0");
+                errors.reject("genreId", "GenreId must be greater than 0");
             }
 
             if(bookModel.getAuthors().isEmpty()) {

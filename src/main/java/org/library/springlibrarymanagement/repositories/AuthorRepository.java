@@ -3,9 +3,9 @@ package org.library.springlibrarymanagement.repositories;
 import org.library.springlibrarymanagement.entities.AuthorEntity;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface AuthorRepository extends CrudRepository<AuthorEntity, Long> {
 
-    List<AuthorEntity> findAllByFirstNameInAndLastNameIn(List<String> firstName, List<String> lastName);
+    Optional<AuthorEntity> findByFirstNameAndLastName(String firstName, String lastName);
 }
