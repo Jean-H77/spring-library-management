@@ -16,11 +16,6 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AuthorModel> getAuthorById(@PathVariable Long id) {
-        return authorService.getAuthorById(id);
-    }
-
     @GetMapping("/{firstname}/{lastname}")
     public ResponseEntity<AuthorModel> getAuthorByFirstAndLastName(
             @PathVariable String firstname, @PathVariable String lastname) {
